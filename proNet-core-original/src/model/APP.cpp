@@ -112,14 +112,6 @@ void APP::Train(int walk_times, int sample_times, double jump, int negative_samp
                 vector<long> walks = pnet.JumpingRandomWalk(random_keys[vid], jump);
                 pnet.UpdatePair(w_vertex, w_context, walks[0], walks.back(), dim, negative_samples, _alpha);
             }
-
-            // update with path sharing
-            /*
-            for (int i=1; i!=walks.size(); ++i)
-            {
-                pnet.UpdatePair(w_vertex, w_context, walks[0], walks[i], dim, negative_samples, _alpha);
-            }
-            */
             
             count++;
             if (count % MONITOR == 0)
