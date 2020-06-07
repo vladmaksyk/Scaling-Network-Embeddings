@@ -1,0 +1,22 @@
+ssh badne7
+ssh gorina1
+conda info --envs                              # to list all enviroments
+conda activate my_env                          # activate my_env
+
+vim AmortizedRandomWalk_Multiprocessing.py     # enter python editor
+"alt+i"                                        # enable editing
+"Esc"										   # disable editing
+":x"                                           # save and exit  
+
+python AmortizedRandomWalk_Multiprocessing.py  # run the oython script
+
+Remove folder:
+1) git rm -r folder-name 
+or
+2) rm -r folder-name
+
+Clone repository:
+git clone https://github.com/vinaysetty/scaling-network-embeddings.git
+
+Install Packages:
+pip install scipy
