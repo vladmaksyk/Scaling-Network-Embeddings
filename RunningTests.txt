@@ -1,0 +1,60 @@
+Run everything on gorina3
+
+1)cloning single branch:
+git clone --branch amortizeacrosswalks https://github.com/vinaysetty/scaling-network-embeddings.git
+
+2)The modified app algorithm should reside in:
+proNet-core/src/model/APP.cpp
+
+4) bulid the exe files:
+cd proNet-core
+- make clean
+- make
+
+5) give permission to file in uniz system:
+chmod +x train.sh
+==========================================================================================================================================
+TESTS ON MODIFIED APP:
+1) Running app for blogcatalog:
+cd /proNet-core-modified
+make clean
+make
+./train.sh /home/prosjekt/deepnews/graphembeddings/data/BlogCatalog/edgelist/BlogCatalog-edgelist.txt Blogcat-app-modified undirected
+
+2) Running app for youtube:
+cd /proNet-core-modified
+make clean
+make
+./train.sh /home/prosjekt/deepnews/graphembeddings/data/Youtube-labelled/edgelist/Youtube-labelled-edgelist.txt Youtube-app-modified undirected
+
+3) Running app for flickr:
+cd /proNet-core-original
+make clean
+make
+./train.sh /home/prosjekt/deepnews/graphembeddings/data/Flickr-labelled/edgelist/Flickr-labelled-edgelist.txt Flickr-app-modified undirected
+
+=============================================================================================================================================
+TESTS ON ORIGINAL APP:
+1) Running app for blogcatalog:
+cd /proNet-core-original
+make clean
+make
+./train.sh /home/prosjekt/deepnews/graphembeddings/data/BlogCatalog/edgelist/BlogCatalog-edgelist.txt Blogcat-app-original undirected
+
+2) Running app for youtube:
+cd /proNet-core-original
+make clean
+make
+./train.sh /home/prosjekt/deepnews/graphembeddings/data/Youtube-labelled/edgelist/Youtube-labelled-edgelist.txt Youtube-app-original undirected
+
+3) Running app for flickr:
+cd /proNet-core-original
+make clean
+make
+./train.sh /home/prosjekt/deepnews/graphembeddings/data/Flickr-labelled/edgelist/Flickr-labelled-edgelist.txt Flickr-app-original undirected
+
+
+
+
+
+

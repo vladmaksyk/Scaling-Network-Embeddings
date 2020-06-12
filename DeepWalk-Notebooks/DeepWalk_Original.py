@@ -111,7 +111,7 @@ def countCP(context_pairs):
     print("Total value sums up to: ", countSum)
 
 def process(args):
-    start = time.time()
+
     if args.format == "adjlist":
         G = graph.load_adjacencylist(args.input, undirected=args.undirected)
     elif args.format == "edgelist":
@@ -123,35 +123,42 @@ def process(args):
     else:
         raise Exception("Unknown file format: '%s'.  Valid formats: 'adjlist', 'edgelist', 'mat'" % args.format)
 
+    #Info
     print("Number of nodes: {}".format(len(G.nodes())))
-
     num_walks = len(G.nodes()) * args.budget
-
     #print("Number of walks: {}".format(num_walks))
-
-    data_size = num_walks * args.budget
-
+    #data_size = num_walks * args.budget
     #print("Data size (walks*length): {}".format(data_size))
     #print("G.nodes :", G.nodes())
 
-    if data_size < args.max_memory_data_size:
-        print("Walking...")
-        print("Walk lenght:",args.walk_length,", Budget:", args.budget,", Window size:", args.window_size, ", Workers:", args.workers)
-        walks = graph.build_deepwalk_corpus(G, num_paths=args.budget,
-                                            path_length=args.walk_length, alpha=0, rand=random.Random(args.seed))
-        save_corpus(args.walk_length, args.budget, args.window_size, walks)
-        Context_Pairs = convertPathsToContextPairs(args.walk_length, args.budget, args.window_size)
-        countCP(Context_Pairs)
-        #print(Context_Pairs)
-        # Count the total count sum
+    #if data_size < args.max_memory_data_size:
 
-        #print("Training...")
-        #model = Word2Vec(walks, size=args.representation_size, window=args.window_size, min_count=0, sg=1, hs=1, workers=args.workers)
+    print("Walking...")
+    start_walk = time.time()
+    print("Walk lenght:",args.walk_length,", Budget:", args.budget,", Window size:", args.window_size, ", Workers:", args.workers)
+    walks = graph.build_deepwalk_corpus(G, num_paths=args.budget,
+                                        path_length=args.walk_length, alpha=0, rand=random.Random(args.seed))
+    Context_Pairs = convertPathsToContextPairs(args.walk_length, args.budget, args.window_size)
+    end_walk = time.time()
+    result_walk = end_walk - start_walk
+    print("Walk time :", str(datetime.timedelta(seconds=round(result_walk))))
 
-    #model.wv.save_word2vec_format(args.output)
-    end = time.time()
-    result = end - start
-    print("Run in :",str(datetime.timedelta(seconds=round(result))))
+    print("Training...")
+    start_training = time.time()
+    model = Word2Vec(walks, size=args.representation_size, window=args.window_size, min_count=0, sg=1, hs=1, workers=args.workers)
+    model.wv.save_word2vec_format(args.output)
+    end_training = time.time()
+    result_training = end_training - start_training
+    print("Training time :",str(datetime.timedelta(seconds=round(result_training))))
+
+    print("Total Duration time :", str(datetime.timedelta(seconds=round(result_walk + result_training))))
+
+    print("Counting context pairs ans saving wlaks to disk...")
+    # Count the total count sum
+    countCP(Context_Pairs)
+    # Save walks to disk
+    save_corpus(args.walk_length, args.budget, args.window_size, walks)
+    print("Finished!")
 
 def main():
     parser = ArgumentParser("deepwalk",
