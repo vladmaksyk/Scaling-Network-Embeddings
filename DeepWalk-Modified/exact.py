@@ -14,7 +14,7 @@ import copy
 
 
 filepathCSV = "../edgelists/BlogCatalog-edgelist.csv"
-embeddingsPath = "../embeddings/BlogCatalog-approximate.txt.embeddings"
+embeddingsPath = "../embeddings/BlogCatalog-exact.txt.embeddings"
 
 def parseEdgeList2(graph_file, direction="undirected"):
     # Create Graph
@@ -243,14 +243,14 @@ def Runner(wl,b,ows,input,output):
 
 #RUNNER
 
-walklength = 40
-budget = 1
-windowsize = 10
-inputfile = filepathCSV
-outputfile = embeddingsPath
-direction = "undirected"
+# walklength = 40
+# budget = 1
+# windowsize = 10
+# inputfile = filepathCSV
+# outputfile = embeddingsPath
+# direction = "undirected"
 
-contextPairs = Runner(walklength,budget,windowsize,inputfile,outputfile)
+#contextPairs = Runner(walklength,budget,windowsize,inputfile,outputfile)
 
 
 

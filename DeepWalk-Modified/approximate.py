@@ -269,14 +269,14 @@ def Runner(wl,b,ows,input,output):
 
 #RUNNER
 
-walklength = 40
-budget = 1
-windowsize = 10
-inputfile = filepathCSV
-outputfile = embeddingsPath
-direction = "undirected"
+# walklength = 40
+# budget = 1
+# windowsize = 10
+# inputfile = filepathCSV
+# outputfile = embeddingsPath
+# direction = "undirected"
 
-contextPairs = Runner(walklength,budget,windowsize,inputfile,outputfile)
+#contextPairs = Runner(walklength,budget,windowsize,inputfile,outputfile)
 
 
 
