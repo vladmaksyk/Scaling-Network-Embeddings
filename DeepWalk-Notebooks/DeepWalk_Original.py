@@ -14,9 +14,9 @@ from concurrent.futures import ProcessPoolExecutor
 import logging
 
 import graph
-import walks as serialized_walks
+#import walks as serialized_walks
 from gensim.models import Word2Vec
-from skipgram import Skipgram
+#from skipgram import Skipgram
 
 from six import text_type as unicode
 from six import iteritems
@@ -131,39 +131,40 @@ def process(args):
     #print("Data size (walks*length): {}".format(data_size))
     #print("G.nodes :", G.nodes())
 
-    #if data_size < args.max_memory_data_size:
+    if args.type == "original":
+        print("Walking...")
+        start = time.time()
+        print("Walk lenght:",args.walk_length,", Budget:", args.budget,", Window size:", args.window_size, ", Workers:", args.workers)
+        walks = graph.build_deepwalk_corpus(G, num_paths=args.budget,
+                                            path_length=args.walk_length, alpha=0, rand=random.Random(args.seed))
+        save_corpus(args.walk_length, args.budget, args.window_size, walks)
+        print("Training...")
+        model = Word2Vec(walks, size=args.representation_size, window=args.window_size, min_count=0, sg=1, hs=1, workers=args.workers)
+        model.wv.save_word2vec_format(args.output)
+        end = time.time()
+        result = end - start
+        print("Total Duration time :", str(datetime.timedelta(seconds=round(result))))
+        print("Finished!")
 
-    print("Walking...")
-    start_walk = time.time()
-    print("Walk lenght:",args.walk_length,", Budget:", args.budget,", Window size:", args.window_size, ", Workers:", args.workers)
-    walks = graph.build_deepwalk_corpus(G, num_paths=args.budget,
-                                        path_length=args.walk_length, alpha=0, rand=random.Random(args.seed))
-    Context_Pairs = convertPathsToContextPairs(args.walk_length, args.budget, args.window_size)
-    end_walk = time.time()
-    result_walk = end_walk - start_walk
-    print("Walk time :", str(datetime.timedelta(seconds=round(result_walk))))
+    elif args.type == "exact":
+        print("Running the exact version of DeepWalk")
 
-    print("Training...")
-    start_training = time.time()
-    model = Word2Vec(walks, size=args.representation_size, window=args.window_size, min_count=0, sg=1, hs=1, workers=args.workers)
-    model.wv.save_word2vec_format(args.output)
-    end_training = time.time()
-    result_training = end_training - start_training
-    print("Training time :",str(datetime.timedelta(seconds=round(result_training))))
+    elif args.type == "approximate":
+        print("Running the approximate version of DeepWalk")
 
-    print("Total Duration time :", str(datetime.timedelta(seconds=round(result_walk + result_training))))
+    elif args.type == "parallelized":
+        print("Running the parallelized version of DeepWalk")
 
-    print("Counting context pairs ans saving wlaks to disk...")
-    # Count the total count sum
-    countCP(Context_Pairs)
-    # Save walks to disk
-    save_corpus(args.walk_length, args.budget, args.window_size, walks)
-    print("Finished!")
+    else:
+        print("Specify the correct version of DeepWalk (exact,approximate,parallelized)")
 
 def main():
     parser = ArgumentParser("deepwalk",
                             formatter_class=ArgumentDefaultsHelpFormatter,
                             conflict_handler='resolve')
+
+    parser.add_argument("--type", default="exact",
+                        help="Choose the variation of DeepWalk")
 
     parser.add_argument("--debug", dest="debug", action='store_true', default=False,
                         help="drop a debugger if an exception is raised.")
@@ -213,7 +214,10 @@ def main():
                         help='Number of parallel processes.')
 
     # cmdargs = "--format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 1 --output blogcatalog.embeddings"
-    cmdargs = "--format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output karate.embeddings"
+    #cmdargs = "--type original --format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output karate.embeddings"
+    cmdargs = "--type approximate --format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output karate.embeddings"
+
+
     args = parser.parse_args(cmdargs.split())
 
     numeric_level = getattr(logging, args.log.upper(), None)

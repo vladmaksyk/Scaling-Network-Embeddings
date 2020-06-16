@@ -12,10 +12,9 @@ from tqdm import tqdm
 import array as arr
 import copy
 
-#filepathTXT = "../edgelists/BlogCatalog-edgelist.txt"
-filepathCSV = "input/BlogCatalog-edgelist.csv"
-#embeddingsrecursive = "../embeddings/BlogCatalog-edgelist.txt.embeddings-recursive"
-embeddings = "../embeddings/blogCatalog.txt.embeddings"
+
+filepathCSV = "../edgelists/BlogCatalog-edgelist.csv"
+embeddingsPath = "../embeddings/BlogCatalog-approximate.txt.embeddings"
 
 def parseEdgeList2(graph_file, direction="undirected"):
     # Create Graph
@@ -56,9 +55,23 @@ def parseEdgeList2(graph_file, direction="undirected"):
 def getAdjNPList(graph):
     adjdict = {}
     for vertex in graph:
-        adjdict[vertex] = np.array([n for n in G.neighbors(vertex)])
+        adjdict[vertex] = np.array([n for n in graph.neighbors(vertex)])
         np.random.shuffle(adjdict[vertex])
     return adjdict
+
+def CountContextPairs(contextPairs):
+    countSum = 0
+    for key, value in contextPairs.items():
+        countSum += value
+    print("Total value sums up to: ", countSum)
+
+def save_embeddings(path ,contextPairs):
+    file = open(path, 'w')
+    #Writing to file
+    for (key, value) in contextPairs.items():
+        file.write(str(key) + " " + str(value) + "\n" )
+    file.close()
+    print("Successfully written embeddings to file:", embeddingsPath)
 
 def getToyGraph():
     G = nx.Graph()
@@ -177,7 +190,25 @@ def BFSRandomWalkWindow(queue, queue_len, queue_pop_idx, queue_add_idx, context_
                 queue_add_idx += 1
 
 
-def Runner():
+def Runner(wl,b,ows,input,output):
+    global WALK_LENGHT
+    global BUDGET
+    global ORIGINAL_WINDOW_SIZE
+    global QUEUE_BUFFER_SIZE
+    global WINDOW_SIZE
+    global adjdict
+    global all_sets
+
+    WALK_LENGHT = wl
+    BUDGET = b
+    ORIGINAL_WINDOW_SIZE = ows
+
+    WINDOW_SIZE = ORIGINAL_WINDOW_SIZE * 2 + 1
+    QUEUE_BUFFER_SIZE = (BUDGET * WALK_LENGHT) - (BUDGET * 2) + 1
+
+    G = parseEdgeList2(input)  # Integer labels
+    adjdict = getAdjNPList(G)
+
     start = time.time()
     random.seed(0)
     rand = random.Random(0)
@@ -204,35 +235,23 @@ def Runner():
         BFSRandomWalkWindow(queue, queue_len, queue_pop_idx, queue_add_idx, context_pairs, WINDOW_SIZE, WALK_LENGHT)
     end = time.time()
     result = end - start
-    print("Run in :", result)
+    print("Running time :", result)
+    CountContextPairs(context_pairs)
+    save_embeddings(output, context_pairs)
     return context_pairs
 
-# Set the actual parameters and graph
-WALK_LENGHT = 40
-BUDGET = 1
-ORIGINAL_WINDOW_SIZE = 10
-WINDOW_SIZE = ORIGINAL_WINDOW_SIZE*2+1
-QUEUE_BUFFER_SIZE = (BUDGET*WALK_LENGHT)-(BUDGET*2) + 1
-#G = parseEdgeList1(filepathTXT) #String labels
 
-G = parseEdgeList2(filepathCSV) # Integer labels
-adjdict = getAdjNPList(G)
+#RUNNER
 
+walklength = 40
+budget = 1
+windowsize = 10
+inputfile = filepathCSV
+outputfile = embeddingsPath
+direction = "undirected"
 
-
-contextPairs = Runner()
-
-# Count the total count sum
-countSum = 0
-for key, value in contextPairs.items():
-    countSum += value
-print("Total value sums up to: ", countSum)
+contextPairs = Runner(walklength,budget,windowsize,inputfile,outputfile)
 
 
-# print("Writing context pairs to file...")
-# #Writing to file
-# for (key, value) in contextPairs.items():
-#     embeddings.write(str(key) + " " + str(value) + "\n" )
-# embeddings.close()
 
-print("Finished")
+

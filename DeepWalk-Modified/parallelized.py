@@ -15,10 +15,8 @@ from multiprocessing import Pool
 from itertools import repeat
 import tqdm
 
-filepathTXT = "input/BlogCatalog-edgelist.txt"
-filepathCSV = "input/BlogCatalog-edgelist.csv"
-#embeddingsrecursive = "../embeddings/BlogCatalog-edgelist.txt.embeddings-recursive"
-#embeddingsiterative = "../embeddings/BlogCatalog-edgelist.txt.embeddings-iterative"
+filepathCSV = "../edgelists/BlogCatalog-edgelist.csv"
+embeddingsPath = "../embeddings/BlogCatalog-approximate.txt.embeddings"
 
 def toyGraph():
     G = nx.Graph()
@@ -56,10 +54,25 @@ def parseEdgeList2(graph_file, direction="undirected"):
     else:
         return G
 
+def CountContextPairs(contextPairs):
+    total_count = 0
+    for cp_set in contextPairs:
+        total_count += len(cp_set)
+    print("Total amount of context pairs :", total_count)
+
+def save_embeddings(path ,contextPairs):
+    file = open(path, 'w')
+    #Writing to file
+    for (key, value) in contextPairs.items():
+        file.write(str(key) + " " + str(value) + "\n" )
+    file.close()
+    print("Successfully written embeddings to file:", embeddingsPath)
+
+
 def getAdjNPList(graph):
     adjdict = {}
     for vertex in graph:
-        adjdict[vertex] = np.array([n for n in G.neighbors(vertex)])
+        adjdict[vertex] = np.array([n for n in graph.neighbors(vertex)])
         np.random.shuffle(adjdict[vertex])
     return adjdict
 
@@ -183,47 +196,61 @@ def BFSRandomWalkWindow(startvertex, adjdict):
     return context_pairs
 
 
-# Set the actual parameters and graph
-WALK_LENGHT = 40
-BUDGET = 1
-ORIGINAL_WINDOW_SIZE = 10
 
-# Set toy parameters and graph
-#WALK_LENGHT = 3
-#BUDGET = 1
-#ORIGINAL_WINDOW_SIZE = 1
 
-WINDOW_SIZE = ORIGINAL_WINDOW_SIZE * 2 + 1
-
-if __name__ ==  '__main__':
+def Runner(wl,b,ows,input,output,workers):
     start = time.time()
+    global WALK_LENGHT
+    global BUDGET
+    global ORIGINAL_WINDOW_SIZE
+    global QUEUE_BUFFER_SIZE
+    global WINDOW_SIZE
+    global adjdict
+    global all_sets
 
-    #Load Toy graph
-    #G = toyGraph()
-    #adjdict = getAdjNPList(G)
+    WALK_LENGHT = wl
+    BUDGET = b
+    ORIGINAL_WINDOW_SIZE = ows
+
+    WINDOW_SIZE = ORIGINAL_WINDOW_SIZE * 2 + 1
+    QUEUE_BUFFER_SIZE = (BUDGET * WALK_LENGHT) - (BUDGET * 2) + 1
 
     #Load real graph
     print("Loading Data...")
-    G = parseEdgeList2(filepathCSV)
+    G = parseEdgeList2(input)
     adjdict = getAdjNPList(G)
 
-    num_processors = multiprocessing.cpu_count()
+    #num_processors = multiprocessing.cpu_count()
     print("Running BFSRandomWalk...")
-    print("Walk lenght:", WALK_LENGHT, ", Budget:", BUDGET, ", Window size:", ORIGINAL_WINDOW_SIZE, ", Workers:",num_processors)
-    p = Pool(processes=num_processors)
+    print("Walk lenght:", WALK_LENGHT, ", Budget:", BUDGET, ", Window size:", ORIGINAL_WINDOW_SIZE, ", Workers:",workers)
+    #p = Pool(processes=workers)
     nodes = [i for i in adjdict.keys()]
-    contextPairs = p.starmap(BFSRandomWalkWindow, zip(nodes, repeat(adjdict)))
-
-    total_count = 0
-    for cp_set in contextPairs:
-        total_count += len(cp_set)
-        #print("Set lenght ->", len(cp_set) )
-    print("Total amount of context pairs :", total_count)
+    with Pool(workers) as p:
+        contextPairs = p.starmap(BFSRandomWalkWindow, zip(nodes, repeat(adjdict)))
 
     end = time.time()
     result = end - start
     print("The execution time ->", str(datetime.timedelta(seconds=round(result))))
+
+    CountContextPairs(contextPairs)
+    save_embeddings(output, contextPairs)
+
     p.terminate()
+
+if __name__ ==  '__main__':
+    start = time.time()
+
+    #RUNNER
+
+    walklength = 40
+    budget = 1
+    windowsize = 10
+    inputfile = filepathCSV
+    outputfile = embeddingsPath
+    direction = "undirected"
+    workers = 4
+
+    contextPairs = Runner(walklength,budget,windowsize,inputfile,outputfile,workers)
 
 
 
