@@ -1,7 +1,4 @@
 
-# proNet-core
-<img src="http://cherry.cs.nccu.edu.tw/~g10018/portfolio/images/pronet.png" width="480">
-
 This is a C++ framework for variant **unweighted** network embedding techniques. We currently release the command line interface for following models:
 - DeepWalk
   - [DeepWalk: online learning of social representations](http://dl.acm.org/citation.cfm?id=2623732)
