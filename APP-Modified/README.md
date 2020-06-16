@@ -1,7 +1,5 @@
 
 This is a C++ framework for variant **unweighted** network embedding techniques. We currently release the command line interface for following models:
-- DeepWalk
-  - [DeepWalk: online learning of social representations](http://dl.acm.org/citation.cfm?id=2623732)
 - APP (**A**symmetric **P**roximity **P**reserving graph embedding)
   - [Scalable Graph Embedding for Asymmetric Proximity](https://aaai.org/ocs/index.php/AAAI/AAAI17/paper/view/14696)
 
