@@ -47,13 +47,5 @@ Usage:
 ./app -train net.txt -save rep.txt -undirected 1 -dimensions 64 -walk_times 10 -walk_steps 40 -window_size 5 -negative_samples 5 -alpha 0.025 -threads 1
 ```
 
-# Example Script
-This shell script will help obtain the representations of the Youtube links in [Youtube-links](http://socialnetworks.mpi-sws.mpg.de/data/youtube-links.txt.gz) dataset.
-```sh
-cd example
-sh train_youtube.sh
-```
-Changing the number of threads in *train_youtube.sh* could speedup the process.
-
 
 
