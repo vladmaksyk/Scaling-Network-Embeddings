@@ -55,6 +55,5 @@ sh train_youtube.sh
 ```
 Changing the number of threads in *train_youtube.sh* could speedup the process.
 
-```
 
 
