@@ -37,7 +37,7 @@ setup(
     author_email='v.maksyk@stud.uis.no',
     url='https://github.com/vladmaksyk/Scaling-Network-Embeddings',
     packages=[
-        'deepwalk',
+        'DeepWalk_Modified',
     ],
     entry_points={'console_scripts': ['deepwalk = DeepWalk_Modified.__main__:main']},
     package_dir={'deepwalk':
