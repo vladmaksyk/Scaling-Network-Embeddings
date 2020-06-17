@@ -12,8 +12,8 @@ from tqdm import tqdm
 import array as arr
 import copy
 
-filepathCSV = "../edgelists/BlogCatalog-edgelist.csv"
-embeddingsPath = "../embeddings/BlogCatalog-approximate.txt.embeddings"
+# filepathCSV = "../edgelists/BlogCatalog-edgelist.csv"
+# embeddingsPath = "../embeddings/BlogCatalog-approximate.txt.embeddings"
 
 def parseEdgeList2(graph_file, direction = "undirected"):
     # Create Graph

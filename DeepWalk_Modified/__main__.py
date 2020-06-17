@@ -125,7 +125,7 @@ def process(args):
 
     elif args.type == "parallelized":
         print("Running the parallelized version of DeepWalk")
-        CP = parallelized.Runner(args.walk_length, args.budget, args.window_size, args.input, args.output)
+        #CP = parallelized.Runner(args.walk_length, args.budget, args.window_size, args.input, args.output)
 
     else:
         print("Specify the correct version of DeepWalk (exact,approximate,parallelized)")
@@ -185,7 +185,7 @@ def main():
     parser.add_argument('--workers', default=1, type=int,
                         help='Number of parallel processes.')
 
-    # cmdargs = "--format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 1 --output blogcatalog.embeddings"
+    #cmdargs = "--format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 1 --output blogcatalog.embeddings"
     #cmdargs = "--type original --format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output karate.embeddings"
     #cmdargs = "--type exact --format edgelist --input ../edgelists/BlogCatalog-edgelist.csv --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output ../embeddings/BlogCatalog-approximate.txt.embeddings"
 

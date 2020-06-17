@@ -13,8 +13,8 @@ import array as arr
 import copy
 
 
-filepathCSV = "../edgelists/BlogCatalog-edgelist.csv"
-embeddingsPath = "../embeddings/BlogCatalog-exact.txt.embeddings"
+# filepathCSV = "../edgelists/BlogCatalog-edgelist.csv"
+# embeddingsPath = "../embeddings/BlogCatalog-exact.txt.embeddings"
 
 def parseEdgeList2(graph_file, direction="undirected"):
     # Create Graph
