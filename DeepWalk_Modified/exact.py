@@ -71,7 +71,7 @@ def save_embeddings(path ,contextPairs):
     for (key, value) in contextPairs.items():
         file.write(str(key) + " " + str(value) + "\n" )
     file.close()
-    print("Successfully written embeddings to file:", embeddingsPath)
+    print("Successfully written embeddings to file:", path)
 
 def getToyGraph():
     G = nx.Graph()

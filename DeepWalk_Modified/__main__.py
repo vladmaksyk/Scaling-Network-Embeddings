@@ -125,7 +125,7 @@ def process(args):
 
     elif args.type == "parallelized":
         print("Running the parallelized version of DeepWalk")
-        #CP = parallelized.Runner(args.walk_length, args.budget, args.window_size, args.input, args.output)
+        CP = parallelized.Runner(args.walk_length, args.budget, args.window_size, args.input, args.output)
 
     else:
         print("Specify the correct version of DeepWalk (exact,approximate,parallelized)")
