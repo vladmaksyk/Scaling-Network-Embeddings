@@ -20,7 +20,7 @@ def parseEdgeList2(graph_file, direction = "undirected"):
     G = nx.Graph()
     # Create head
     colNames=["Start", "End"]
-    edgeData = pd.read_csv(filepathCSV, names=colNames)
+    edgeData = pd.read_csv(graph_file, names=colNames)
 
     #Add nodes
     nodes = []
