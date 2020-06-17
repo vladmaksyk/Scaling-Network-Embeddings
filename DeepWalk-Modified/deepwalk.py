@@ -187,11 +187,9 @@ def main():
 
     # cmdargs = "--format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 1 --output blogcatalog.embeddings"
     #cmdargs = "--type original --format edgelist --input input/BlogCatalog-edgelist.txt --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output karate.embeddings"
-    cmdargs = "--type exact --format edgelist --input ../edgelists/BlogCatalog-edgelist.csv --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output ../embeddings/BlogCatalog-approximate.txt.embeddings"
+    #cmdargs = "--type exact --format edgelist --input ../edgelists/BlogCatalog-edgelist.csv --max-memory-data-size 100000000 --representation-size 128 --undirected True --walk-length 40 --budget 1 --window-size 10 --workers 10 --output ../embeddings/BlogCatalog-approximate.txt.embeddings"
 
-
-    args = parser.parse_args(cmdargs.split())
-
+    args = parser.parse_args()
     numeric_level = getattr(logging, args.log.upper(), None)
     logging.basicConfig(format=LOGFORMAT)
     logger.setLevel(numeric_level)
@@ -201,4 +199,6 @@ def main():
 
     process(args)
 
-main()
+
+if __name__ == "__main__":
+    sys.exit(main())
