@@ -39,7 +39,7 @@ setup(
     packages=[
         'deepwalk',
     ],
-    entry_points={'console_scripts': ['deepwalk = DeepWalk-Modified.deepwalk:main']},
+    entry_points={'console_scripts': ['deepwalk = DeepWalk-Modified.__main__:main']},
     package_dir={'deepwalk':
                  'deepwalk'},
     include_package_data=True,
